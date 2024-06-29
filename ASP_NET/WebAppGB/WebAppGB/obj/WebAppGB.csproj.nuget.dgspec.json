@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Евгений\\Desktop\\ASP_NET\\WebAppGB\\WebAppGB\\WebAppGB.csproj": {}
+    "C:\\Users\\Евгений\\Desktop\\ASP\\ASP_NET\\WebAppGB\\WebAppGB\\WebAppGB.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Евгений\\Desktop\\ASP_NET\\WebAppGB\\WebAppGB\\WebAppGB.csproj": {
+    "C:\\Users\\Евгений\\Desktop\\ASP\\ASP_NET\\WebAppGB\\WebAppGB\\WebAppGB.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Евгений\\Desktop\\ASP_NET\\WebAppGB\\WebAppGB\\WebAppGB.csproj",
+        "projectUniqueName": "C:\\Users\\Евгений\\Desktop\\ASP\\ASP_NET\\WebAppGB\\WebAppGB\\WebAppGB.csproj",
         "projectName": "WebAppGB",
-        "projectPath": "C:\\Users\\Евгений\\Desktop\\ASP_NET\\WebAppGB\\WebAppGB\\WebAppGB.csproj",
+        "projectPath": "C:\\Users\\Евгений\\Desktop\\ASP\\ASP_NET\\WebAppGB\\WebAppGB\\WebAppGB.csproj",
         "packagesPath": "C:\\Users\\Евгений\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Евгений\\Desktop\\ASP_NET\\WebAppGB\\WebAppGB\\obj\\",
+        "outputPath": "C:\\Users\\Евгений\\Desktop\\ASP\\ASP_NET\\WebAppGB\\WebAppGB\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\Евгений\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -45,6 +45,14 @@
         "net8.0": {
           "targetAlias": "net8.0",
           "dependencies": {
+            "AutoMapper.Extensions.Microsoft.DependencyInjection": {
+              "target": "Package",
+              "version": "[12.0.0, )"
+            },
+            "Autofac.Extensions.DependencyInjection": {
+              "target": "Package",
+              "version": "[9.0.0, )"
+            },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",
               "version": "[8.0.6, )"

@@ -1,7 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Text;
+using WebAppGB.Abstraction;
 using WebAppGB.Data;
+using WebAppGB.Dto;
 using WebAppGB.Models;
+using WebAppGB.Repository;
 
 namespace WebAppGB.Controllers
 {
@@ -9,73 +13,89 @@ namespace WebAppGB.Controllers
     [Route("[controller]")]
     public class ProductController : ControllerBase
     {
-        [HttpPost]
-        public ActionResult<int> AddProduct(string name, string description, decimal price)
-        {
-            using (StorageContext storageContext = new StorageContext())
-            {
-                if (storageContext.Products.Any(p => p.Name == name))
-                    return StatusCode(409);
+        private readonly IProductRepository _productRepository;
 
-                var product = new Product() { Name = name, Description = description, Price = price };
-                storageContext.Products.Add(product);
-                storageContext.SaveChanges();
-                return Ok(product.Id);
+        public ProductController(IProductRepository productRepository)
+        {
+            _productRepository = productRepository;
+        }
+
+        [HttpPost]
+        public ActionResult<int> AddProduct(ProductDto productDto)
+        {
+            try
+            {
+                var id = _productRepository.AddProduct(productDto);
+                return Ok(id);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(409);
             }
         }
         [HttpGet("get_all_product")]
         public ActionResult<IEnumerable<Product>> GetAllProducts()
         {
-            IEnumerable<Product> list;
-            using (StorageContext storageContext = new StorageContext())
-            {
-                list = storageContext.Products.Select(p => new Product { Name = p.Name, Description = p.Description, Price = p.Price }).ToList();
-                return Ok(list);
-            }
+            return Ok(_productRepository.GetAllProducts());
+            
         }
-        [HttpDelete("delete_group")]
+        [HttpDelete("delete_group/{groupId}")]
         public ActionResult DeleteGroup(int groupId)
         {
-            using (StorageContext storageContext = new StorageContext())
+            try
             {
-                var group = storageContext.ProductGroup.Find(groupId);
-                if (group == null)
-                    return NotFound();
-
-                storageContext.ProductGroup.Remove(group);
-                storageContext.SaveChanges();
+                _productRepository.DeleteProduct(groupId);
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
             }
         }
 
         [HttpDelete("delete_product/{productId}")]
         public ActionResult DeleteProduct(int productId)
         {
-            using (StorageContext storageContext = new StorageContext())
+            try
             {
-                var product = storageContext.Products.Find(productId);
-                if (product == null)
-                    return NotFound();
-
-                storageContext.Products.Remove(product);
-                storageContext.SaveChanges();
+                _productRepository.DeleteProduct(productId);
                 return Ok();
+            }
+            catch (Exception ex)
+            {
+                return NotFound();
             }
         }
 
         [HttpPut("update_price/{productId}")]
         public ActionResult UpdatePrice(int productId, decimal newPrice)
         {
-            using (StorageContext storageContext = new StorageContext())
+            try
             {
-                var product = storageContext.Products.Find(productId);
-                if (product == null)
-                    return NotFound();
-
-                product.Price = newPrice;
-                storageContext.SaveChanges();
+                _productRepository.UpdateProductPrice(productId, newPrice);
                 return Ok();
             }
+            catch (Exception ex)
+            {
+                return NotFound();
+            }
+        }
+        [HttpGet("export_csv")]
+        public IActionResult ExportProductsToCsv()
+        {
+            var products = _productRepository.GetAllProducts();
+            var csvBuilder = new StringBuilder();
+            csvBuilder.AppendLine("ProductGroupId, ProductName, ProductPrice, Description");
+
+            foreach (var product in products)
+            {
+                csvBuilder.AppendLine($"{product.ProductGroupId},{product.Name},{product.Price},{product.Description}");
+            }
+
+            byte[] buffer = Encoding.UTF8.GetBytes(csvBuilder.ToString());
+            var csvFileName = "products.csv";
+            return File(buffer, "text/csv", csvFileName);
         }
     }
+
 }

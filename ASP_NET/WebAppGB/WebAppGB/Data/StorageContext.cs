@@ -8,8 +8,15 @@ namespace WebAppGB.Data
         public virtual DbSet<Product> Products { get; set; }
         public virtual DbSet<ProductGroup> ProductGroup { get; set; }
         public virtual DbSet<Storage> Storage { get; set; }
+        private readonly string _dbConnectionString;
 
-        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer("Data Source =.\\SQLEXPRESS")
+        public StorageContext() { }
+        public StorageContext(string connection)
+        {
+            _dbConnectionString = connection;
+        }
+
+        protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder) => optionsBuilder.UseSqlServer(_dbConnectionString)
             .UseLazyLoadingProxies()
             .LogTo(Console.WriteLine);
 
